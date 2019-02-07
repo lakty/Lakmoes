@@ -1,166 +1,166 @@
 {% extends "base.html" %}
 {% from 'macros.html' import render_field %}
 {% block section %}
-    <section id="center" class="main-center bg-gray">
-        <div class="container emp-profile">
-            <div class="row">
-           <div class="col-md-2">
+<section id="center" class="main-center bg-gray">
+    <div class="container emp-profile">
+        <div class="row">
+            <div class="col-md-2">
                 <div class="row">
-                    <img class="rounded img-fluid" src="{{ person.get_image() }}" alt="">
+                    <img class="rounded img-fluid" src="{{ person.get_image()[-1] }}" alt="">
                 </div>
                 <div class="row mt-2">
                     <a href="" class="btn btn-outline-success btn-block">Додати фото</a>
                 </div>
             </div>
             <div class="offset-md-1 col-md-9">
-                    <div class="profile-head">
+                <div class="profile-head">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <h5>
+                                {{ person.last_name }} {% if  person.first_name %}{{ person.first_name }}{% endif %} {% if  person.middle_name %}{{ person.middle_name }}{% endif %}
+                            </h5>
+                            <h6>
+                                {{ record.get_category() }}
+                            </h6>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="btn-group">
+                                <a href="{{ url_for('record_edit', number =record.id ) }}" class="btn btn-outline-primary" role="button">Редагувати</a>
+                                <a class="btn btn-outline-danger" href="{{ url_for('remove_record', number=number  ) }}" role="button">Видалити</a>
+                            </div>
+                        </div>
+                    </div>
+                    <h5>{{ 'Приватний' if record.permission == True else 'Публічний' }}</h5>
+                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active show" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Особа</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="place-tab" data-toggle="tab" href="#place" role="tab" aria-controls="place" aria-selected="false">Адреси</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Контактна інформація</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="contact-tab" data-toggle="tab" href="#estate" role="tab" aria-controls="estate" aria-selected="false">Нерухоме майно</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="tab-content profile-tab" id="myTabContent">
+                    <div class="tab-pane fade active show" id="home" role="tabpanel" aria-labelledby="home-tab">
                         <div class="row">
-                            <div class="col-md-8">
-                                <h5>
-                                    {{ person.last_name }} {% if  person.first_name %}{{ person.first_name }}{% endif %} {% if  person.middle_name %}{{ person.middle_name }}{% endif %}
-                                </h5>
-                                <h6>
-                                    {{ record.get_category() }}
-                                </h6>
+                            <div class="col-md-6">
+                                <label>Id запису</label>
+                            </div>
+                            <div class="col-md-6">
+                                <p>{{ person.id }}</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label>ПІБ</label>
+                            </div>
+                            <div class="col-md-6">
+                                <p>{{ person.last_name }} {% if  person.first_name %}{{ person.first_name }}{% endif %} {% if  person.middle_name %}{{ person.middle_name }}{% endif %}</p>
+                            </div>
+                        </div>
+                        {% if  person.date_birthday %}<tr>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label>Дата народження</label>
+                            </div>
+                            <div class="col-md-6">
+                                <p>{{ person.date_birthday.date() }}</p>
+                            </div>
+                        </div>
+                        {% endif %}
+                        {% if  person.place_birthday_address %}
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label>Місто народження</label>
+                            </div>
+                            <div class="col-md-6">
+                                <p>{{ person.place_birthday_address }}</p>
+                            </div>
+                        </div>
+                        {% endif %}
+                        {% if  person.code %}
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label>РНОКПП</label>
+                            </div>
+                            <div class="col-md-6">
+                                <p>{{ person.code }}</p>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="tab-pane fade" id="place" role="tabpanel" aria-labelledby="profile-tab">
+                        {% for place in person.places %}
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label>{% if  place.get_type() %}{{ place.get_type() }}{% endif %}</label>
                             </div>
                             <div class="col-md-4">
-                                <div class="btn-group">
-                                    <a href="{{ url_for('record_edit', number =record.id ) }}" class="btn btn-outline-primary" role="button">Редагувати</a>
-                                    <a class="btn btn-outline-danger" href="{{ url_for('remove_record', number=number  ) }}" role="button">Видалити</a>
+                                <p>{% if  place.address %}{{ place.address }}{% endif %}</p>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="btn-group btn-block mb-2">
+                                    <a href="{{ url_for('record_place', number=number, place_id=place.id  ) }}" class="btn btn-outline-primary" role="button">Редагувати</a>
+                                    <a class="btn btn-outline-danger" href="{{ url_for('remove_place', number=number, place_id=place.id  ) }}" role="button">Видалити</a>
                                 </div>
                             </div>
                         </div>
-                        <h5>{{ 'Приватний' if record.permission == True else 'Публічний' }}</h5>
-                        <ul class="nav nav-tabs" id="myTab" role="tablist">
-                            <li class="nav-item">
-                                <a class="nav-link active show" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Особа</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" id="place-tab" data-toggle="tab" href="#place" role="tab" aria-controls="place" aria-selected="false">Адреси</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Контактна інформація</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" id="contact-tab" data-toggle="tab" href="#estate" role="tab" aria-controls="estate" aria-selected="false">Нерухоме майно</a>
-                            </li>
-                        </ul>
+                        <hr>
+                        {% endfor %}
+                        <a href="{{ url_for('add_place', number=number  ) }}" class="btn btn-outline-success" role="button">Додати</a>
                     </div>
-                    <div class="tab-content profile-tab" id="myTabContent">
-                        <div class="tab-pane fade active show" id="home" role="tabpanel" aria-labelledby="home-tab">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <label>Id запису</label>
-                                </div>
-                                <div class="col-md-6">
-                                    <p>{{ person.id }}</p>
+                    <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="profile-tab">
+                        {% for contact in person.contacts %}
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label>{% if  contact.get_type() %}{{ contact.get_type() }}{% endif %}</label>
+                            </div>
+                            <div class="col-md-4">
+                                <p>{% if  contact.contact %}{{ contact.contact }}{% endif %}</p>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="btn-group btn-block mb-2">
+                                    <a href="{{ url_for('edit_contact', number=number, contact_id=contact.id  ) }}" class="btn btn-outline-primary" role="button">Редагувати</a>
+                                    <a href="{{ url_for('remove_contact', number=number, contact_id=contact.id  ) }}" class="btn btn-outline-danger" role="button">Видалити</a>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <label>ПІБ</label>
-                                </div>
-                                <div class="col-md-6">
-                                    <p>{{ person.last_name }} {% if  person.first_name %}{{ person.first_name }}{% endif %} {% if  person.middle_name %}{{ person.middle_name }}{% endif %}</p>
+                        </div>
+                        <hr>
+                        {% endfor %}
+                        <a href="{{ url_for('add_contact', number=number  ) }}" class="btn btn-outline-success" role="button">Додати</a>
+                    </div>
+                    <div class="tab-pane fade" id="estate" role="tabpanel" aria-labelledby="profile-tab">
+                        {% for estate in person.estates %}
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label>{% if  estate.get_type() %}{{ estate.get_type() }}{% endif %}</label>
+                            </div>
+                            <div class="col-md-4">
+                                <p>{% if  estate.place_id %}{{ estate.get_place().address }}{% endif %}</p>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="btn-group btn-block mb-2">
+                                    <a href="{{ url_for('edit_estate', number=number, estate_id=estate.id  ) }}" class="btn btn-outline-primary" role="button">Редагувати</a>
+                                    {#                                            <a href="{{ url_for('remove_estate', number=number, estate_id=estate.id  ) }}" class="btn btn-outline-danger" role="button">Видалити</a>#}
                                 </div>
                             </div>
-                            {% if  person.date_birthday %}<tr>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <label>Дата народження</label>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <p>{{ person.date_birthday.date() }}</p>
-                                    </div>
-                                </div>
-                            {% endif %}
-                            {% if  person.place_birthday_address %}
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <label>Місто народження</label>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <p>{{ person.place_birthday_address }}</p>
-                                    </div>
-                                </div>
-                            {% endif %}
-                            {% if  person.code %}
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <label>РНОКПП</label>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <p>{{ person.code }}</p>
-                                    </div>
-                                </div>
-                            {% endif %}
                         </div>
-                        <div class="tab-pane fade" id="place" role="tabpanel" aria-labelledby="profile-tab">
-                            {% for place in person.places %}
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <label>{% if  place.get_type() %}{{ place.get_type() }}{% endif %}</label>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <p>{% if  place.address %}{{ place.address }}{% endif %}</p>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="btn-group btn-block mb-2">
-                                            <a href="{{ url_for('record_place', number=number, place_id=place.id  ) }}" class="btn btn-outline-primary" role="button">Редагувати</a>
-                                            <a class="btn btn-outline-danger" href="{{ url_for('remove_place', number=number, place_id=place.id  ) }}" role="button">Видалити</a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <hr>
-                            {% endfor %}
-                            <a href="{{ url_for('add_place', number=number  ) }}" class="btn btn-outline-success" role="button">Додати</a>
-                        </div>
-                        <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="profile-tab">
-                            {% for contact in person.contacts %}
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <label>{% if  contact.get_type() %}{{ contact.get_type() }}{% endif %}</label>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <p>{% if  contact.contact %}{{ contact.contact }}{% endif %}</p>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="btn-group btn-block mb-2">
-                                            <a href="{{ url_for('edit_contact', number=number, contact_id=contact.id  ) }}" class="btn btn-outline-primary" role="button">Редагувати</a>
-                                            <a href="{{ url_for('remove_contact', number=number, contact_id=contact.id  ) }}" class="btn btn-outline-danger" role="button">Видалити</a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <hr>
-                            {% endfor %}
-                            <a href="{{ url_for('add_contact', number=number  ) }}" class="btn btn-outline-success" role="button">Додати</a>
-                        </div>
-                        <div class="tab-pane fade" id="estate" role="tabpanel" aria-labelledby="profile-tab">
-                            {% for estate in person.estates %}
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <label>{% if  estate.get_type() %}{{ estate.get_type() }}{% endif %}</label>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <p>{% if  estate.place_id %}{{ estate.get_place().address }}{% endif %}</p>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="btn-group btn-block mb-2">
-                                            <a href="{{ url_for('edit_estate', number=number, estate_id=estate.id  ) }}" class="btn btn-outline-primary" role="button">Редагувати</a>
-                                            {#                                            <a href="{{ url_for('remove_estate', number=number, estate_id=estate.id  ) }}" class="btn btn-outline-danger" role="button">Видалити</a>#}
-                                        </div>
-                                    </div>
-                                </div>
-                                <hr>
-                            {% endfor %}
-                            <div class="row">
-                                <a href="{{ url_for('add_estate', number=number  ) }}" class="btn btn-outline-success" role="button">Додати</a>
-                            </div>
+                        <hr>
+                        {% endfor %}
+                        <div class="row">
+                            <a href="{{ url_for('add_estate', number=number  ) }}" class="btn btn-outline-success" role="button">Додати</a>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </section>
+    </div>
+</section>
 {% endblock %}
 

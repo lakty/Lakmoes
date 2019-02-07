@@ -241,6 +241,16 @@ def remove_record(number):
     return redirect(url_for('index'))
 
 
+@app.route('/remove/user<int:user_id>/image<int:image_id>/', methods=["POST", "GET"])
+@login_required
+def remove_image(user_id, image_id):
+    if current_user.id==user_id:
+        removed_image = Image.query.filter(Image.id == image_id).first()
+        db.session.delete(removed_image)
+        db.session.commit()
+        return redirect(url_for('index'))
+
+
 @app.route('/record<number>/remove/place<int:place_id>/', methods=["POST", "GET"])
 @login_required
 def remove_place(number, place_id):

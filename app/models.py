@@ -74,9 +74,9 @@ class User(db.Model, UserMixin):
 
     def get_image(self):
         if len(list(self.images)) > 0:
-            return '/uploads/'+self.images[-1].image_url
+            return ['/uploads/'+image.image_url for image in self.images]
         else:
-            return 'http://ssl.gstatic.com/accounts/ui/avatar_2x.png'
+            return ['http://ssl.gstatic.com/accounts/ui/avatar_2x.png']
 
 
 class Person(db.Model):
@@ -99,9 +99,9 @@ class Person(db.Model):
 
     def get_image(self):
         if len(list(self.images)) > 0:
-            return '/uploads/'+Image.query.filter(Image.id == self.images[0]).first().image_url
+            return ['/uploads/' + image.image_url for image in self.images]
         else:
-            return 'http://ssl.gstatic.com/accounts/ui/avatar_2x.png'
+            return ['http://ssl.gstatic.com/accounts/ui/avatar_2x.png']
 
 
 class Date(db.Model):
