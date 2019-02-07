@@ -15,14 +15,14 @@ from app import db, nominatim
 import json
 
 
-# @app.errorhandler(Exception)
-# def handle_error(e):
-#     description = 'Я чайник'
-#     code = 418
-#     if isinstance(e, HTTPException):
-#         code = e.code
-#         description = e.description
-#     return render_template('404.html', code=code, description=description), code
+@app.errorhandler(Exception)
+def handle_error(e):
+    description = 'Я чайник'
+    code = 418
+    if isinstance(e, HTTPException):
+        code = e.code
+        description = e.description
+    return render_template('404.html', code=code, description=description), code
 
 def genFileName(filename):
     char_set = string.ascii_uppercase + string.digits
