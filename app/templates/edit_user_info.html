@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block section %}
+    <div class="container bg-light p-5 mt-4">
+        <div class="mt-4 col-md-8 mx-auto">
+            <h2 class="Subhead-heading">Редагувати інформацію про користувача</h2>
+        </div>
+        <div class="mx-4 my-4 col-md-8 mx-auto">
+            <form action="{{ url_for("edit_user", user_id=current_user.id ) }}" method="post">
+                <div class="form-row mb-5">
+                    <div class="col-md-4">{{ field_wd_ws(field=form.last_name, value=user.last_name) }}</div>
+                    <div class="col-md-4">{{ field_wd_ws(field=form.first_name, value=user.first_name) }}</div>
+                    <div class="col-md-4">{{ field_wd_ws(field=form.middle_name, value=user.middle_name) }}</div>
+                    <div class="col-md-4">{{ field_wd_ws(field=form.position, value=user.position) }}</div>
+                    <div class="col-md-4">{{ field_wd_ws(field=form.unit, value=user.unit) }}</div>
+                </div>
+                {{ form.submit(class_='btn btn-primary', value='Зберегти') }}
+            </form>
+        </div>
+    </div>
+{% endblock %}
+

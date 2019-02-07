@@ -1,0 +1,71 @@
+{% macro render_field_ws(field,value=field.label.text) %}
+    {{ field.label }}
+    {{ field(placeholder=value,**kwargs)|safe }}
+    {% if field.errors %}
+        <ul class=errors>
+            {% for error in field.errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endmacro %}
+{% macro render_field(field, field_source,value=field.label.text ) %}
+    {{ field.label }}
+    {% if value==field.label.text %}
+        <div class="input-group">
+            {{ field(placeholder=value,**kwargs)|safe }}
+            {{ field_source(placeholder=field_source.label.text,**kwargs)|safe }}
+        </div>
+    {% else %}
+        <div class="input-group">
+            {{ field(value=value,**kwargs)|safe }}
+            {{ field_source(value=field_source.label.text,**kwargs)|safe }}
+        </div>
+    {% endif %}
+    <div class="form-row">
+        {% if field.errors %}
+            {% for error in field.errors %}
+                <p>{{ error }}</p>
+            {% endfor %}
+        {% endif %}
+        {% if field_source.errors %}
+            {% for error in field_source.errors %}
+                <p>{{ error }}</p>
+            {% endfor %}
+        {% endif %}
+    </div>
+{% endmacro %}
+{% macro fieldAddres(field,field_source,value=field.label.text) %}
+    {{ field.label }}
+    <div class="input-group">
+        <div class="input-group-prepend">
+            <button class="btn btn-outline-primary" onclick="openSearch();" type="button">Знайти <i class="fas fa-map-marked-alt"></i></button>
+        </div>
+        {% if value==field.label.text %}
+            {{ field(placeholder=value,disabled=True,**kwargs)|safe }}
+            {{ field_source(placeholder=field_source.label.text,**kwargs)|safe }}
+        {% else %}
+            {{ field(value=value,disabled=True,**kwargs)|safe }}
+            {{ field_source(value=field_source.label.text,**kwargs)|safe }}
+        {% endif %}
+    </div>
+    <div class="form-row">
+        {% if field.errors %}
+            {% for error in field.errors %}
+                <p>{{ error }}</p>
+            {% endfor %}
+        {% endif %}
+        {% if field_source.errors %}
+            {% for error in field_source.errors %}
+                <p>{{ error }}</p>
+            {% endfor %}
+        {% endif %}
+    </div>
+{% endmacro %}
+{% macro field_wd_ws(field,value) %}
+    {% if value %}
+        {{ render_field_ws(field=field, class='form-control', value=value) }}
+    {% else %}
+        {{ render_field_ws(field=field, class='form-control') }}
+    {% endif %}
+{% endmacro %}

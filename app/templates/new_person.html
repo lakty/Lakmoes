@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block modals %}
+    <div class="modal fade bd-example-modal-lg" id="searchAddress" tabindex="-1" role="dialog" aria-labelledby="searchAddressLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <legend>ЗНАЙТИ АДРЕССУ</legend>
+                    <div class="row">
+                        <div class="col-lg-4">
+                            <form action="/address" id="form_map">
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <input type="text" class="form-control" name="addressStr" id="addressStr" value="">
+                                    </div>
+                                    <div class="form-row">
+                                        <input type="button" class="btn btn-primary btn-block" value="Знайти на карті" onclick="get_len(this.form.id,'{{ form.place_address.id }}','{{ form.place_latitude.id }}','{{ form.place_longitude.id }}');">
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div id="map" class="col-lg-7 map mr-1" ></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block section %}
+    <div class="container bg-light p-5 mt-4 emp-profile">
+        <div class="mt-4 col-md-8 mx-auto">
+            <h2 class="Subhead-heading">Створити новий запис</h2>
+        </div>
+        <div class="mx-4 my-4 col-md-8 mx-auto">
+            <form action="{{ url_for('new_person',record_id=record_id) }}" method="post">
+                <div class="form-row">
+                    <div class="col-md-6 mb-3">
+                        {{ render_field(field=form.first_name,field_source=form.first_name_source, class='form-control') }}
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        {{ render_field(field=form.middle_name,field_source=form.middle_name_source, class='form-control') }}
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col-md-6 mb-3">
+                        {{ render_field(field=form.last_name,field_source=form.last_name_source, class='form-control') }}
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        {{ render_field(field=form.date,field_source=form.date_source, class='form-control') }}
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col-md-6 mb-3">
+                        {{ fieldAddres(field=form.place_address,field_source=form.place_address_source, class='form-control') }}
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        {{ render_field(field=form.code,field_source=form.code_source, class='form-control') }}
+                    </div>
+                </div>
+                {{ form.place_latitude }}
+                {{ form.place_longitude }}
+                {{ form.submit(class_='btn btn-primary') }}
+            </form>
+        </div>
+    </div>
+{% endblock %}
+{% block scripts %}
+{% endblock %}

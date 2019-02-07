@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+{% block section %}
+    <div class="container emp-profile">
+        <div class="row">
+            <div class="col-md-2">
+                <div class="row">
+                    <img class="rounded img-fluid" src="{{ user.get_image() }}" alt="">
+                </div>
+                <div class="row mt-2">
+                    <a href="" class="btn btn-outline-success btn-block">Додати фото</a>
+                </div>
+            </div>
+            <div class="offset-md-1 col-md-9">
+                <div class="profile-head">
+                    <div class="row">
+                        <h5 class="col-md-10">
+                            {{ user.last_name }} {{ user.first_name }} {{ user.middle_name }}
+                        </h5>
+                        <a href="#" class="btn btn-outline-primary col-md-2" role="button">Редагувати</a>
+                    </div>
+                    <h6>
+                        {{ user.position }}
+                    </h6>
+                    <p class="proile-rating">Кількість записів : <span>{{ user.get_count_records() }}</span></p>
+                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active show" id="user-tab" data-toggle="tab" href="#user" role="tab" aria-controls="user" aria-selected="true">Користувач</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="record-tab" data-toggle="tab" href="#record" role="tab" aria-controls="record" aria-selected="true">Досьє</a>
+                        </li>
+                        {#                        <li class="nav-item">#}
+                        {#                            <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Timeline</a>#}
+                        {#                        </li>#}
+                    </ul>
+                </div>
+                <div class="tab-content profile-tab" id="myTabContent">
+                    <div class="tab-pane fade active show" id="user" role="tabpanel" aria-labelledby="home-tab">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label>ID користувача</label>
+                            </div>
+                            <div class="col-md-6">
+                                <p>{{ user.id }}</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label>Підрозділ</label>
+                            </div>
+                            <div class="col-md-6">
+                                <p>{{ user.get_category() }}</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label>П.І.Б</label>
+                            </div>
+                            <div class="col-md-6">
+                                <p>{{ user.last_name }} {{ user.first_name }} {{ user.middle_name }}</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label>Email</label>
+                            </div>
+                            <div class="col-md-6">
+                                <p>{{ user.email }}</p>
+                            </div>
+                        </div>
+                        {#                        <div class="row">#}
+                        {#                            <div class="col-md-6">#}
+                        {#                                <label>Phone</label>#}
+                        {#                            </div>#}
+                        {#                            <div class="col-md-6">#}
+                        {#                                <p>123 456 7890</p>#}
+                        {#                            </div>#}
+                        {#                        </div>#}
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label>Посада</label>
+                            </div>
+                            <div class="col-md-6">
+                                <p>{{ user.position }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="record" role="tabpanel" aria-labelledby="home-tab">
+                        {% for record in records %}
+                            {% if record.persons[0] %}
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label>{{ record.get_category() }}</label>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <a href="{{ url_for('record', number=record.id) }}"><p>{{ record.persons[0].first_name }} {{ record.persons[0].middle_name }} {{ record.persons[0].last_name }}</p></a>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                        <a href="{{ url_for('new_record') }}" class="btn btn-outline-primary">Додати досьэ</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block modals %}
+    <div class="modal fade bd-example-modal-lg" id="searchAddress" tabindex="-1" role="dialog" aria-labelledby="searchAddressLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <legend>ЗНАЙТИ АДРЕССУ</legend>
+                    <div class="row">
+                        <div class="col-lg-4">
+                            <form action="/address" id="form_map">
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <input type="text" class="form-control" name="addressStr" id="addressStr" value="">
+                                    </div>
+                                    <div class="form-row">
+                                        <input type="button" class="btn btn-primary btn-block" value="Знайти на карті" onclick="get_len(this.form.id,'{{ form.address.id }}','{{ form.latitude.id }}','{{ form.longitude.id }}');">
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div id="map" class="col-lg-7 map mr-1" ></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block section %}
+    <div class="container bg-light p-5 mt-4">
+        <div class="mt-4 col-md-8 mx-auto">
+            <h2 class="Subhead-heading">Додати інформацію про нерухоме майно</h2>
+        </div>
+        <div class="mx-4 my-4 col-md-8 mx-auto">
+            <form action="{{ url_for("add_estate",number=number ) }}" method="post">
+                <div class="form-row mb-3">
+                    <div class="col-md-6">
+                        {{ render_field_ws(field=form.type, class='form-control') }}
+                    </div>
+                    <div class="col-md-6">
+                        {{ fieldAddres(field=form.address,field_source=form.address_source, class='form-control') }}
+                    </div>
+                </div>
+                {{ form.latitude }}
+                {{ form.longitude }}
+                {{ form.submit(class_='btn btn-primary', value='Зберегти') }}
+            </form>
+        </div>
+    </div>
+{% endblock %}

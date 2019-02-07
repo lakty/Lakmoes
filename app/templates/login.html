@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% from 'macros.html' import render_field_vs %}
+{% block name %}Авторизація{% endblock %}
+{% block section %}
+    <section id="center" class="main-center">
+        <div class="container">
+            <div class="col-md-6 login-form-2 d-block mx-auto my-4">
+                <h1 id="login" class="text-center">Вхід</h1>
+                <form method="post" action="{{ url_for('login') }}">
+                    {{ form.hidden_tag() }}
+                    <div class="form-group">
+                        {{ render_field_ws(form.username, class="form-control") }}
+                    </div>
+                    <div class="form-group">
+                        {{ render_field_ws(form.password, class="form-control") }}
+                    </div>
+                    <div class="form-group">
+                        {{ form.submit(class_='btn btn-primary') }}
+                    </div>
+                    <div class="form-group">
+                        {{ render_field_ws(form.remember_me, class='ForgetPwd') }}
+                    </div>
+                    <a href="{{ url_for('register') }}">Створити новий запис</a>
+                </form>
+            </div>
+        </div>
+    </section>
+{% endblock %}

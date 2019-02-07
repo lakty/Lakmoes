@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block section %}
+    <section id="center" class="main-center">
+        <div class="container">
+            <div class="col-md-6 login-form-2 d-block mx-auto my-4">
+                <h1 id="login" class="text-center">Реєстрація</h1>
+                <form method="post" action="{{ url_for('register') }}">
+                    {{ form.hidden_tag() }}
+                    <div class="form-group">
+                        {{ render_field_ws(form.username, class="form-control") }}
+                    </div>
+                    <div class="form-group">
+                        {{ render_field_ws(form.email, class="form-control") }}
+                    </div>
+                    <div class="form-group">
+                        {{ render_field_ws(form.password, class="form-control") }}
+                    </div>
+                    <div class="form-group">
+                        {{ render_field_ws(form.password2, class="form-control") }}
+                    </div>
+                    <div class="form-group">
+                        {{ form.submit(class_='btn btn-primary') }}
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+{% endblock %}
