@@ -74,7 +74,7 @@ class User(db.Model, UserMixin):
 
     def get_image(self):
         if len(list(self.images)) > 0:
-            return Image.query.filter(Image.id == self.images[0]).first().image_url
+            return '/uploads/'+self.images[-1].image_url
         else:
             return 'http://ssl.gstatic.com/accounts/ui/avatar_2x.png'
 

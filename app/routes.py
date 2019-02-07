@@ -2,10 +2,12 @@
 import os
 import random
 import string
+import hashlib
 
 from flask import render_template, flash, redirect, url_for, request, abort, send_from_directory
 from werkzeug.urls import url_parse
 from werkzeug.exceptions import HTTPException
+from werkzeug.utils import secure_filename
 from app import app
 from flask_login import login_user, logout_user
 from app.models import *
@@ -15,16 +17,17 @@ from app import db, nominatim
 import json
 
 
-@app.errorhandler(Exception)
-def handle_error(e):
-    description = 'Я чайник'
-    code = 418
-    if isinstance(e, HTTPException):
-        code = e.code
-        description = e.description
-    return render_template('404.html', code=code, description=description), code
+# @app.errorhandler(Exception)
+# def handle_error(e):
+#     description = 'Я чайник'
+#     code = 418
+#     if isinstance(e, HTTPException):
+#         code = e.code
+#         description = e.description
+#     return render_template('404.html', code=code, description=description), code
 
-def genFileName(filename):
+
+def gen_file_name(filename):
     char_set = string.ascii_uppercase + string.digits
     path = str(''.join(random.sample(char_set * 2, 2))) + '/' + str(''.join(random.sample(char_set * 2, 2)))
     if not os.path.exists(app.config['UPLOAD_FOLDER'] + path):
@@ -68,24 +71,29 @@ def index():
 @login_required
 def location():
     region = request.form["addressStr"]
-    location = nominatim.geocode(region, timeout=10)
+    request_location = nominatim.geocode(region, timeout=10)
     return json.dumps(
-        {'status': 'OK', 'location': location.address, 'latitude': location.latitude, 'longitude': location.longitude});
+        {
+            'status': 'OK',
+            'location': request_location.address,
+            'latitude': request_location.latitude,
+            'longitude': request_location.longitude
+        }
+    )
 
 
 @app.route('/record<number>/', methods=["POST", "GET"])
 @login_required
 def record(number):
-    record = db.session.query(Record).filter(Record.id == number).first()
-    if record:
-        record = Record.query.filter(Record.id == number).first()
-        if int(record.user_id) == int(current_user.get_id()):
-            person = record.persons[0]
+    opened_record = Record.query.filter(Record.id == number).first()
+    if opened_record:
+        if int(opened_record.user_id) == int(current_user.get_id()):
+            person = opened_record.persons[0]
             return render_template("person.html",
                                    title=f'Досьє на особу {person.last_name}',
                                    person=person,
                                    number=number,
-                                   record=record
+                                   record=opened_record
                                    )
         else:
             abort(403, description='Вибачте, але це приватний запис')
@@ -96,9 +104,9 @@ def record(number):
 @app.route('/record<number>/edit/', methods=["POST", "GET"])
 @login_required
 def record_edit(number):
-    record = db.session.query(Record).filter(Record.id == number).first()
+    edited_record = db.session.query(Record).filter(Record.id == number).first()
     if record:
-        person = record.persons[0]
+        person = edited_record.persons[0]
         form = PersonForm()
         if form.is_submitted():
             if form.last_name.data:
@@ -136,8 +144,8 @@ def record_edit(number):
 @app.route('/record<number>/edit/image/', methods=["POST", "GET"])
 @login_required
 def edit_image(number):
-    record = db.session.query(Record).filter(Record.id == number).first()
-    person = record.persons[0]
+    edited_record = db.session.query(Record).filter(Record.id == number).first()
+    person = edited_record.persons[0]
     return render_template("edit_image.html", title=f'Досьє на особу {person.last_name}')
 
 
@@ -145,8 +153,8 @@ def edit_image(number):
 @login_required
 def edit_contact(number, contact_id):
     contact = db.session.query(Contact).filter(Contact.id == contact_id).first()
-    record = db.session.query(Record).filter(Record.id == number).first()
-    person = record.persons[0]
+    edited_record = db.session.query(Record).filter(Record.id == number).first()
+    person = edited_record.persons[0]
     form = ContactForm()
     if form.is_submitted():
         if form.type.data:
@@ -165,8 +173,8 @@ def edit_contact(number, contact_id):
 @login_required
 def record_place(number, place_id):
     place = db.session.query(Place).filter(Place.id == place_id).first()
-    record = db.session.query(Record).filter(Record.id == number).first()
-    person = record.persons[0]
+    edited_record = db.session.query(Record).filter(Record.id == number).first()
+    person = edited_record.persons[0]
     form = PlaceForm()
     if form.is_submitted():
         if form.type.data:
@@ -206,11 +214,29 @@ def edit_user(user_id):
     return render_template('edit_user_info.html', form=form, user=user)
 
 
+@app.route('/user<int:user_id>/add_image/', methods=["POST", "GET"])
+@login_required
+def user_add_image(user_id):
+    user = db.session.query(User).filter(User.id == user_id).first()
+    form = UserImageForm()
+    if form.is_submitted():
+        file = request.files['image']
+        if file and allowed_file(file.filename):
+            filename = hashlib.md5(secure_filename(file.filename).encode()).hexdigest()
+            img_path = gen_file_name(filename)
+            file.save(app.config['UPLOAD_FOLDER'] + img_path)
+            image = Image(image_url=img_path)
+            user.images.append(image)
+            db.session.commit()
+        return redirect(url_for('my'))
+    return render_template("user_add_image.html", form=form, user=user)
+
+
 @app.route('/remove/record<number>/', methods=["POST", "GET"])
 @login_required
 def remove_record(number):
-    record = db.session.query(Record).filter(Record.id == number).first()
-    db.session.delete(record)
+    removed_record = db.session.query(Record).filter(Record.id == number).first()
+    db.session.delete(removed_record)
     db.session.commit()
     return redirect(url_for('index'))
 
@@ -236,8 +262,8 @@ def remove_contact(number, contact_id):
 @app.route('/record<int:number>/add/estate/', methods=["POST", "GET"])
 @login_required
 def add_estate(number):
-    record = db.session.query(Record).filter(Record.id == number).first()
-    person = record.persons[0]
+    record_to_add_estate = db.session.query(Record).filter(Record.id == number).first()
+    person = record_to_add_estate.persons[0]
     form = EstateForm()
     if form.is_submitted():
         source = Source(source=form.address_source.data)
@@ -280,8 +306,8 @@ def edit_estate(number, estate_id):
 @app.route('/record<number>/add/place/', methods=["POST", "GET"])
 @login_required
 def add_place(number):
-    record = db.session.query(Record).filter(Record.id == number).first()
-    person = record.persons[0]
+    record_to_add_place = db.session.query(Record).filter(Record.id == number).first()
+    person = record_to_add_place.persons[0]
     form = PlaceForm()
     if form.is_submitted():
         place = Place(
@@ -292,15 +318,15 @@ def add_place(number):
         )
         person.places.append(place)
         db.session.commit()
-        return redirect(url_for('record', number=record.id))
+        return redirect(url_for('record', number=record_to_add_place.id))
     return render_template("add_place.html", title=f'Досьє на особу', form=form, number=number)
 
 
 @app.route('/record<number>/add/contact/', methods=["POST", "GET"])
 @login_required
 def add_contact(number):
-    record = db.session.query(Record).filter(Record.id == number).first()
-    person = record.persons[0]
+    record_to_add_contact = db.session.query(Record).filter(Record.id == number).first()
+    person = record_to_add_contact.persons[0]
     form = ContactForm()
     if form.is_submitted():
         source = Source(source=form.contact_source.data)
@@ -311,7 +337,7 @@ def add_contact(number):
         )
         person.contacts.append(contact)
         db.session.commit()
-        return redirect(url_for('record', number=record.id))
+        return redirect(url_for('record', number=record_to_add_contact.id))
     return render_template("add_contact.html", title=f'Досьє на особу', form=form, number=number)
 
 
@@ -320,8 +346,8 @@ def add_contact(number):
 def new_person(record_id):
     form = PersonForm()
     if form.is_submitted():
-        new_record=Record.query.filter(Record.id == record_id).first()
-        new_person = Person(
+        record_to_add_created_person = Record.query.filter(Record.id == record_id).first()
+        created_person = Person(
             first_name=form.first_name.data,
             middle_name=form.middle_name.data,
             last_name=form.last_name.data,
@@ -331,7 +357,7 @@ def new_person(record_id):
             place_birthday_address=form.place_address.data,
             code=form.code.data,
         )
-        new_record.persons.append(new_person)
+        record_to_add_created_person.persons.append(created_person)
         db.session.commit()
         return redirect(url_for('record', number=record_id))
     return render_template("new_person.html", title='Додати нове досьє на особу', form=form, record_id=record_id)
@@ -350,16 +376,16 @@ def new_record():
     }
     form = RecordForm()
     if form.is_submitted():
-        record = Record(
+        created_record = Record(
             category=form.category.data,
             permission=form.permission.data,
             user_id=current_user.id,
             type=form.record_type.data
         )
-        db.session.add(record)
+        db.session.add(created_record)
         db.session.commit()
         url = 'new_' + get_type[form.record_type.data]
-        return redirect(url_for(url, record_id=record.id))
+        return redirect(url_for(url, record_id=created_record.id))
     return render_template("new_record.html", title='Додати нове досьє', form=form)
 
 
@@ -369,7 +395,6 @@ def login():
         return redirect(url_for('my'))
     form = LoginForm()
     if form.validate_on_submit():
-        print("1")
         user = User.query.filter_by(username=form.username.data).first()
         if user is None or not user.check_password(form.password.data):
             flash('Invalid username or password')

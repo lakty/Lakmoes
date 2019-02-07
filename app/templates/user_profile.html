@@ -7,7 +7,7 @@
                     <img class="rounded img-fluid" src="{{ user.get_image() }}" alt="">
                 </div>
                 <div class="row mt-2">
-                    <a href="" class="btn btn-outline-success btn-block">Додати фото</a>
+                    <a href="{{ url_for('user_add_image', user_id=user.id ) }}" class="btn btn-outline-success btn-block">Додати фото</a>
                 </div>
             </div>
             <div class="offset-md-1 col-md-9">
@@ -29,9 +29,6 @@
                         <li class="nav-item">
                             <a class="nav-link" id="record-tab" data-toggle="tab" href="#record" role="tab" aria-controls="record" aria-selected="true">Досьє</a>
                         </li>
-                        {#                        <li class="nav-item">#}
-                        {#                            <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Timeline</a>#}
-                        {#                        </li>#}
                     </ul>
                 </div>
                 <div class="tab-content profile-tab" id="myTabContent">

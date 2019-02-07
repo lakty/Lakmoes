@@ -144,8 +144,12 @@ class UserInfo(FlaskForm):
     submit = SubmitField('Додати')
 
 
-class ImageForm(FlaskForm):
+class UserImageForm(FlaskForm):
     image = FileField('Зображення', validators=[FileRequired()])
+    submit = SubmitField('Додати')
+
+
+class RecordImageForm(UserImageForm):
     type = SelectField(
         'Тип фото',
         choices=[
@@ -154,4 +158,3 @@ class ImageForm(FlaskForm):
         ]
     )
     image_date = DateField('Дата розміщення')
-    submit = SubmitField('Додати')

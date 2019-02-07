@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block section %}
+<div class="container bg-light p-5 mt-4 emp-profile">
+    <div class="mt-4 col-md-8 mx-auto">
+        <h2 class="Subhead-heading">Додати фото користувача</h2>
+    </div>
+    <div class="mx-4 my-4 col-md-8 mx-auto">
+        <form action="{{ url_for('user_add_image', user_id=user.id ) }}" enctype="multipart/form-data" method="post">
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="inputGroupFileAddon01">Upload</span>
+                </div>
+                <div class="custom-file">
+                    {{ render_field_ws(field=form.image,class="custom-file-input") }}
+                    <label class="custom-file-label" >{{ form.image.label.text }}</label>
+                </div>
+                <div class="input-group-append">
+                    {{ form.submit(class_='btn btn-primary', value='Зберегти') }}
+                </div>
+            </div>
+
+        </form>
+    </div>
+</div>
+{% endblock %}
