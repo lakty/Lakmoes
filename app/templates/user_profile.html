@@ -41,10 +41,10 @@
     <div class="row">
         <div class="col-md-2">
             <div class="row">
-                <img class="rounded img-fluid" src="{{ user.get_image()[-1] }}" onclick="$('#photos').modal('show');" alt="">
-            </div>
-            <div class="row mt-2">
-                <a href="{{ url_for('user_add_image', user_id=user.id ) }}" class="btn btn-outline-success btn-block">Додати фото</a>
+                <div class="col-md-12">
+                    <img class="rounded img-thumbnail mb-2" src="{{ user.get_image()[-1] }}" onclick="$('#photos').modal('show');" alt="">
+                    <a href="{{ url_for('user_add_image', user_id=user.id ) }}" class="btn btn-outline-success btn-block">Додати фото</a>
+                </div>
             </div>
         </div>
         <div class="offset-md-1 col-md-9">
