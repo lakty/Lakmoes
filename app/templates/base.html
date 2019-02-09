@@ -18,17 +18,17 @@
 {% block modals %}{% endblock %}
 {% block header %}
     <nav class="mb-1 navbar navbar-expand-lg">
-        <a class="navbar-brand" href="{{ url_for('index') }}">ЛАКМУС</a>
+        <a class="navbar-brand text-light" href="{{ url_for('index') }}">ЛАКМУС</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item active">
-                    <a class="nav-link" href="{{ url_for('index') }}">Додому</a>
+                    <a class="nav-link text-light" href="{{ url_for('index') }}">Додому</a>
                 </li>
                 <li class="nav-item active">
-                    <a class="nav-link" href="{{ url_for('new_record') }}">Додати нове досьє</a>
+                    <a class="nav-link text-light" href="{{ url_for('new_record') }}">Додати нове досьє</a>
                 </li>
             </ul>
             {% include 'includes/login_button.html' %}
