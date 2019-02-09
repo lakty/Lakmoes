@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block section %}
+    <div class="container bg-light p-5 mt-4 emp-profile">
+        <div class="mt-4 col-md-8 mx-auto">
+            <h2 class="Subhead-heading">Редагувати запис</h2>
+        </div>
+        <div class="mx-4 my-4 col-md-8 mx-auto">
+            <form action="{{ url_for("record_edit", number=number) }}" method="post">
+                <div class="form-row  mb-3">
+                    <div class="col-md-4">
+                        {{ render_field_ws(form.permission, class='form-control') }}
+                    </div>
+                    <div class="col-md-4">
+                        {{ render_field_ws(form.category, class='form-control') }}
+                    </div>
+                    <div class="col-md-4">
+                        {{ render_field_ws(form.record_type, class='form-control') }}
+                    </div>
+                </div>
+                {{ form.submit(class_='btn btn-primary') }}
+            </form>
+        </div>
+    </div>
+{% endblock %}
+{% block scripts %}
+{% endblock %}

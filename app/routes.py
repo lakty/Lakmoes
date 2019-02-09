@@ -87,7 +87,7 @@ def location():
 def record(number):
     opened_record = Record.query.filter(Record.id == number).first()
     if opened_record:
-        if int(opened_record.user_id) == int(current_user.get_id()):
+        if int(opened_record.user_id) == int(current_user.get_id()) or opened_record.permission == False :
             person = opened_record.persons[0]
             return render_template("person.html",
                                    title=f'Досьє на особу {person.last_name}',
@@ -101,9 +101,9 @@ def record(number):
         abort(404, description='Вибачте, але сторінка за запитом не знайдена')
 
 
-@app.route('/record<number>/edit/', methods=["POST", "GET"])
+@app.route('/record<number>/edit/person', methods=["POST", "GET"])
 @login_required
-def record_edit(number):
+def person_edit(number):
     edited_record = db.session.query(Record).filter(Record.id == number).first()
     if record:
         person = edited_record.persons[0]
@@ -125,10 +125,6 @@ def record_edit(number):
                 person.place_birthday_address = form.place_address.data,
             if form.code.data:
                 person.code = form.code.data,
-            if form.permission.data:
-                record.permission = form.permission.data,
-            if form.category.data:
-                record.category = form.category.data,
             db.session.commit()
             return redirect(url_for('record', number=number))
         return render_template("edit_person.html",
@@ -147,6 +143,29 @@ def edit_image(number):
     edited_record = db.session.query(Record).filter(Record.id == number).first()
     person = edited_record.persons[0]
     return render_template("edit_image.html", title=f'Досьє на особу {person.last_name}')
+
+
+@app.route('/record<number>/edit/', methods=["POST", "GET"])
+@login_required
+def record_edit(number):
+    edited_record = db.session.query(Record).filter(Record.id == number).first()
+    if record:
+        form = RecordForm()
+        if form.is_submitted():
+            if form.record_type.data:
+                edited_record.type_id = Type.query.filter(Type.type == form.record_type.data).first().id
+            if form.permission.data:
+                edited_record.permission = True if form.permission.data == 'private' else False
+            if form.category.data:
+                edited_record.category_id = Category.query.filter(Category.category == form.category.data).first().id
+            db.session.commit()
+            return redirect(url_for('record', number=number))
+        return render_template("edit_record.html",
+                               form=form,
+                               number=edited_record.id
+                               )
+    else:
+        abort(404, description='Вибачте, але сторінка за запитом не знайдена')
 
 
 @app.route('/record<number>/edit/contact<int:contact_id>/', methods=["POST", "GET"])
@@ -244,7 +263,7 @@ def remove_record(number):
 @app.route('/remove/user<int:user_id>/image<int:image_id>/', methods=["POST", "GET"])
 @login_required
 def remove_image(user_id, image_id):
-    if current_user.id==user_id:
+    if current_user.id == user_id:
         removed_image = Image.query.filter(Image.id == image_id).first()
         db.session.delete(removed_image)
         db.session.commit()

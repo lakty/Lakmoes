@@ -94,6 +94,7 @@
                             </div>
                         </div>
                         {% endif %}
+                        <a href="{{ url_for('person_edit', number =record.id ) }}" class="btn btn-outline-primary" role="button">Редагувати</a>
                     </div>
                     <div class="tab-pane fade" id="place" role="tabpanel" aria-labelledby="profile-tab">
                         {% for place in person.places %}
