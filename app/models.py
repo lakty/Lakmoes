@@ -10,13 +10,6 @@ def load_user(user_id):
     return User.query.get(user_id)
 
 
-class Category(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    category = db.Column(db.String)
-    records = db.relationship('Record', backref='author', lazy='dynamic')
-    users = db.relationship('User', backref='author', lazy='dynamic')
-
-
 class Record(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
@@ -34,6 +27,13 @@ class Record(db.Model):
 
     def get_category(self):
         return Category.query.filter(Category.id == self.category_id).first().category
+
+
+class Category(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    category = db.Column(db.String)
+    records = db.relationship('Record', backref='author', lazy='dynamic')
+    users = db.relationship('User', backref='author', lazy='dynamic')
 
 
 class Rule(db.Model):
@@ -74,7 +74,7 @@ class User(db.Model, UserMixin):
 
     def get_image(self):
         if len(list(self.images)) > 0:
-            return ['/uploads/' + image.image_url for image in self.images]
+            return ['/uploads/'+image.image_url for image in self.images]
         else:
             return ['http://ssl.gstatic.com/accounts/ui/avatar_2x.png']
 
