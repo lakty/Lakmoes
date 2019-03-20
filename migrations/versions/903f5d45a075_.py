@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: f55ca796ffa9
+Revision ID: 903f5d45a075
 Revises: 
-Create Date: 2019-02-07 17:16:29.278634
+Create Date: 2019-03-20 17:47:12.890462
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'f55ca796ffa9'
+revision = '903f5d45a075'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -107,6 +107,13 @@ def upgrade():
     sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
+    op.create_table('other',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('text', sa.String(length=255), nullable=True),
+    sa.Column('person_id', sa.Integer(), nullable=True),
+    sa.ForeignKeyConstraint(['person_id'], ['person.id'], ),
+    sa.PrimaryKeyConstraint('id')
+    )
     op.create_table('place',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('latitude', sa.String(length=50), nullable=True),
@@ -144,6 +151,7 @@ def upgrade():
     sa.Column('source', sa.String(length=120), nullable=True),
     sa.Column('person_id', sa.Integer(), nullable=True),
     sa.Column('contact_id', sa.Integer(), nullable=True),
+    sa.Column('other_id', sa.Integer(), nullable=True),
     sa.Column('code_id', sa.Integer(), nullable=True),
     sa.Column('place_id', sa.Integer(), nullable=True),
     sa.Column('date_id', sa.Integer(), nullable=True),
@@ -152,6 +160,7 @@ def upgrade():
     sa.ForeignKeyConstraint(['contact_id'], ['contact.id'], ),
     sa.ForeignKeyConstraint(['date_id'], ['date.id'], ),
     sa.ForeignKeyConstraint(['estate_id'], ['estate.id'], ),
+    sa.ForeignKeyConstraint(['other_id'], ['other.id'], ),
     sa.ForeignKeyConstraint(['person_id'], ['person.id'], ),
     sa.ForeignKeyConstraint(['place_id'], ['place.id'], ),
     sa.PrimaryKeyConstraint('id')
@@ -165,6 +174,7 @@ def downgrade():
     op.drop_table('estate')
     op.drop_table('date')
     op.drop_table('place')
+    op.drop_table('other')
     op.drop_table('image')
     op.drop_table('contact')
     op.drop_table('code')

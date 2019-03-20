@@ -451,10 +451,7 @@ def register():
         return redirect(url_for('index'))
     form = RegistrationForm()
     if form.validate_on_submit():
-        user = User(
-            username=form.username.data,
-            email=form.email.data,
-        )
+        user = User(username=form.username.data, email=form.email.data)
         user.set_password(form.password.data)
         db.session.add(user)
         db.session.commit()
@@ -489,7 +486,6 @@ def remove_record_image(number, image_id):
     db.session.delete(removed_image)
     db.session.commit()
     return redirect(url_for('record', number=number))
-
 
 # @app.route('/record<int:number>/geo/', methods=["POST", "GET"])
 # @login_required

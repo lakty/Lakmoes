@@ -91,7 +91,8 @@ class Person(db.Model):
     place_birthday_longitude = db.Column(db.String, nullable=True)
     code = db.Column(db.String, nullable=True)
     dates = db.relationship('Date', backref='author', lazy='dynamic')
-    contacts = db.relationship('Contact', backref='Person', lazy='dynamic')
+    contacts = db.relationship('Contact', backref='author', lazy='dynamic')
+    others = db.relationship('Other', backref='Person', lazy='dynamic')
     places = db.relationship('Place', backref='Person', lazy='dynamic')
     sources = db.relationship('Source', backref='author', lazy='dynamic')
     estates = db.relationship('Estate', backref='author', lazy='dynamic')
@@ -155,6 +156,7 @@ class Source(db.Model):
     source = db.Column(db.String(120))
     person_id = db.Column(db.Integer, db.ForeignKey('person.id'))
     contact_id = db.Column(db.Integer, db.ForeignKey('contact.id'))
+    other_id = db.Column(db.Integer, db.ForeignKey('other.id'))
     code_id = db.Column(db.Integer, db.ForeignKey('code.id'))
     place_id = db.Column(db.Integer, db.ForeignKey('place.id'))
     date_id = db.Column(db.Integer, db.ForeignKey('date.id'))
@@ -185,3 +187,10 @@ class Image(db.Model):
 
     def get_type(self):
         return Type.query.filter(Type.id == self.type_id).first().type
+
+
+class Other(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    text = db.Column(db.String(255))
+    person_id = db.Column(db.Integer, db.ForeignKey('person.id'))
+    sources = db.relationship('Source', backref='Other')

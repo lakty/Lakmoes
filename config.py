@@ -13,3 +13,4 @@ class Config(object):
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     UPLOAD_FOLDER = basedir + '/images/'
     ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
+3

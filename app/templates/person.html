@@ -49,7 +49,6 @@
                     {#                        {% endfor %}#}
                     {#                    </div>#}
                 </div>
-
                 <div class="offset-md-1 col-md-9">
                     <div class="profile-head">
                         <div class="row">
@@ -84,6 +83,9 @@
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" id="contact-tab" data-toggle="tab" href="#photo" role="tab" aria-controls="photo" aria-selected="false">Фото особи</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="contact-tab" data-toggle="tab" href="#other" role="tab" aria-controls="other" aria-selected="false">Інші</a>
                             </li>
                         </ul>
                     </div>
@@ -220,6 +222,21 @@
                                     {% for image in person.images %}
                                         <div class="col-md-3">
                                             <img class="img-thumbnail mb-2" src="/uploads/{{ image.image_url }}">
+                                            <a class="btn btn-danger btn-block" href="{{ url_for('remove_record_image', number = number, image_id=image.id ) }}">Видалити</a>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            <div class="row m-3">
+                                <a href="{{ url_for('record_add_image', number=number  ) }}" class="btn btn-outline-success" role="button">Додати</a>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="other" role="tabpanel" aria-labelledby="profile-tab">
+                            {% if person.others %}
+                                <div class="row">
+                                    {% for other in person.others %}
+                                        <div class="col-md-3">
+                                            {{ others }}
                                             <a class="btn btn-danger btn-block" href="{{ url_for('remove_record_image', number = number, image_id=image.id ) }}">Видалити</a>
                                         </div>
                                     {% endfor %}
