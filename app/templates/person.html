@@ -43,7 +43,13 @@
                     <div class="row mt-2">
                         <a href="{{ url_for("record_add_image", number=number) }}" class="btn btn-outline-success btn-block">Додати фото</a>
                     </div>
+                    <div class="row">
+                        {% for source in person.sources %}
+                            {{ source }}
+                        {% endfor %}
+                    </div>
                 </div>
+
                 <div class="offset-md-1 col-md-9">
                     <div class="profile-head">
                         <div class="row">
@@ -223,6 +229,31 @@
                                 <a href="{{ url_for('record_add_image', number=number  ) }}" class="btn btn-outline-success" role="button">Додати</a>
                             </div>
                         </div>
+<<<<<<< Updated upstream
+=======
+                        <div class="tab-pane fade" id="connects" role="tabpanel" aria-labelledby="profile-tab">
+                            {% for connect in person.contacts %}
+                                <div class="row">
+                                    {#                                    <div class="col-md-4">#}
+                                    {#                                        <label>{% if  estate.get_type() %}{{ estate.get_type() }}{% endif %}</label>#}
+                                    {#                                    </div>#}
+                                    {#                                    <div class="col-md-4">#}
+                                    {#                                        <p>{% if  estate.place_id %}{{ estate.get_place().address }}{% endif %}</p>#}
+                                    {#                                    </div>#}
+                                    {#                                    <div class="col-md-4">#}
+                                    {#                                        <div class="btn-group btn-block mb-2">#}
+                                    {#                                            <a href="{{ url_for('edit_estate', number=number, estate_id=estate.id  ) }}" class="btn btn-outline-primary" role="button">Редагувати</a>#}
+                                    {#                                            <a href="{{ url_for('remove_estate', number=number, estate_id=estate.id  ) }}" class="btn btn-outline-danger" role="button">Видалити</a>#}
+                                    {#                                        </div>#}
+                                    {#                                    </div>#}
+                                </div>
+                                <hr>
+                            {% endfor %}
+                            <div class="row">
+                                <a href="{{ url_for('add_estate', number=number  ) }}" class="btn btn-outline-success" role="button">Додати</a>
+                            </div>
+                        </div>
+>>>>>>> Stashed changes
                     </div>
                 </div>
             </div>
