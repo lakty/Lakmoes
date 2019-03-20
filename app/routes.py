@@ -87,7 +87,7 @@ def location():
 def record(number):
     opened_record = Record.query.filter(Record.id == number).first()
     if opened_record:
-        if int(opened_record.user_id) == int(current_user.get_id()) or opened_record.permission == False :
+        if int(opened_record.user_id) == int(current_user.get_id()) or opened_record.permission == False:
             person = opened_record.persons[0]
             return render_template("person.html",
                                    title=f'Досьє на особу {person.last_name}',
@@ -460,3 +460,40 @@ def register():
         flash('Congratulations, you are now a registered user!')
         return redirect(url_for('login'))
     return render_template('register.html', title='Register', form=form)
+
+
+@app.route('/record<int:number>/add/image/', methods=["POST", "GET"])
+@login_required
+def record_add_image(number):
+    record_to_add_estate = db.session.query(Record).filter(Record.id == number).first()
+    person = record_to_add_estate.persons[0]
+    form = UserImageForm()
+    if form.is_submitted():
+        file = request.files['image']
+        if file and allowed_file(file.filename):
+            filename = hashlib.md5(secure_filename(file.filename).encode()).hexdigest()
+            img_path = gen_file_name(filename)
+            file.save(app.config['UPLOAD_FOLDER'] + img_path)
+            image = Image(image_url=img_path)
+            person.images.append(image)
+            db.session.commit()
+        return redirect(url_for('record', number=number))
+    return render_template("person_add_image.html", form=form, number=number)
+
+
+@app.route('/record<int:number>/remove/image<int:image_id>/', methods=["POST", "GET"])
+@login_required
+def remove_record_image(number, image_id):
+    removed_image = Image.query.filter(Image.id == image_id).first()
+    db.session.delete(removed_image)
+    db.session.commit()
+    return redirect(url_for('record', number=number))
+
+
+# @app.route('/record<int:number>/remove/image<int:image_id>/', methods=["POST", "GET"])
+# @login_required
+# def remove_record_image(number, image_id):
+#     removed_image = Image.query.filter(Image.id == image_id).first()
+#     db.session.delete(removed_image)
+#     db.session.commit()
+#     return redirect(url_for('record', number=number))
