@@ -31,7 +31,7 @@
             <h2 class="Subhead-heading">Редагувати запис</h2>
         </div>
         <div class="mx-4 my-4 col-md-8 mx-auto">
-            <form action="{{ url_for("record_edit", number=number) }}" method="post">
+            <form action="{{ url_for("person_edit", number=number) }}" method="post">
                 <div class="form-row">
                     <div class="col-md-6 mb-3">
                         {% if person.first_name %}
