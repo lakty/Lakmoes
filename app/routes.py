@@ -154,6 +154,7 @@ def record_edit(number):
         if form.is_submitted():
             if form.record_type.data:
                 edited_record.type_id = Type.query.filter(Type.type == form.record_type.data).first().id
+                edited_record.type_id = Type.query.filter(Type.type == form.record_type.data).first().id
             if form.permission.data:
                 edited_record.permission = True if form.permission.data == 'private' else False
             if form.category.data:
