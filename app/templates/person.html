@@ -9,7 +9,7 @@
                         <div class="carousel-inner">
                             {% if person.get_image() %}
                                 <div class="carousel-item active">
-                                    <img class="d-block col-md-12" src="{{ person.get_image()[-1] }}" alt="First slide">
+                                    <img class="img-thumbnail" src="{{ person.get_image()[-1] }}" alt="First slide">
                                 </div>
                                 {% for image in person.get_image()[:-1] %}
                                     <div class="carousel-item">
@@ -38,7 +38,7 @@
             <div class="row">
                 <div class="col-md-2">
                     <div class="row">
-                        <img class="rounded img-thumbnail mb-2" src="{{ person.get_image()[-1] }}" onclick="$('#photos').modal('show');" alt="">
+                        <img class="img-thumbnail mb-2" src="{{ person.get_image()[-1] }}" onclick="$('#photos').modal('show');" alt="">
                     </div>
                     <div class="row mt-2">
                         <a href="{{ url_for("record_add_image", number=number) }}" class="btn btn-outline-success btn-block">Додати фото</a>
