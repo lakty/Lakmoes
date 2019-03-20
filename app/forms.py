@@ -121,6 +121,20 @@ class ContactForm(FlaskForm):
     submit = SubmitField('Редагувати')
 
 
+class ConnectForm(FlaskForm):
+    contact = StringField('Контактна Інформація', validators=[RequiredIf()])
+    type = SelectField(
+        'Тип адреси: ',
+        choices=[
+            ('Абонентський номер', 'Абонентський номер'),
+            ('Електронна поштова скринька', 'Електронна поштова скринька'),
+            ('Сторінка у соціальній мережі', 'Сторінка у соціальній мережі'),
+        ]
+    )
+    contact_source = StringField('Джерело місця народження', validators=[RequiredIf()])
+    submit = SubmitField('Редагувати')
+
+
 class EstateForm(PlaceForm):
     type = SelectField(
         'Тип майна: ',
