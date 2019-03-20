@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block section %}
+    <div class="container bg-light p-5 mt-4">
+        <div class="mt-4 col-md-8 mx-auto">
+            <h2 class="Subhead-heading">Додати додаткову інформацію</h2>
+        </div>
+        <div class="mx-4 my-4 col-md-8 mx-auto">
+            <form action="{{ url_for("add_other",number=number ) }}" method="post">
+                <div class="form-row mb-3">
+                    <div class="col-md-6">
+                        {{ render_field_ws(field=form.other, class='form-control') }}
+                    </div>
+                    <div class="col-md-6">
+                        {{ render_field_ws(field=form.other_source, class='form-control') }}
+                    </div>
+                </div>
+                {{ form.submit(class_='btn btn-primary', value='Зберегти') }}
+            </form>
+        </div>
+    </div>
+{% endblock %}
+{% block scripts %}
+{% endblock %}

@@ -487,22 +487,18 @@ def remove_record_image(number, image_id):
     db.session.commit()
     return redirect(url_for('record', number=number))
 
-# @app.route('/record<int:number>/geo/', methods=["POST", "GET"])
-# @login_required
-# def remove_record_image(number):
-#     record_to_add_estate = db.session.query(Record).filter(Record.id == number).first()
-#     person = record_to_add_estate.persons[0]
-#     geo = dict(
-#         person_place_birthday_address={
-#             'address': person.place_birthday_address,
-#             'latitude': person.place_birthday_latitude,
-#             'longitude': person.place_birthday_longitude,
-#         },
-#         person_places=[{
-#             'address': place.address,
-#             'latitude': place.latitude,
-#             'longitude': place.longitude,
-#         } for place in person.places]
-#     )
-#
-#     return render_template("person_map.html", number=number)
+
+@app.route('/record<int:number>/add/other/', methods=["POST", "GET"])
+@login_required
+def add_other(number):
+    record_to_add_other = db.session.query(Record).filter(Record.id == number).first()
+    person = record_to_add_other.persons[0]
+    form = OtherForm()
+    if form.is_submitted():
+        source = Source(source=form.other_source.data)
+        db.session.add(source)
+        other = Other(text=form.other.data, sources=[source])
+        person.others.append(other)
+        db.session.commit()
+        return redirect(url_for('record', number=number))
+    return render_template("add_other.html", title=f'Досьє на особу', form=form, number=number)

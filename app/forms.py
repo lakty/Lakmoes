@@ -174,3 +174,9 @@ class RecordImageForm(UserImageForm):
         ]
     )
     image_date = DateField('Дата розміщення')
+
+
+class OtherForm(FlaskForm):
+    other = StringField('Додаткова інформація', validators=[RequiredIf()])
+    other_source = StringField('Джерело додаткової інформації', validators=[RequiredIf()])
+    submit = SubmitField('Додати')
