@@ -79,9 +79,6 @@
                             <li class="nav-item">
                                 <a class="nav-link" id="contact-tab" data-toggle="tab" href="#photo" role="tab" aria-controls="photo" aria-selected="false">Фото особи</a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link" id="contact-tab" data-toggle="tab" href="#connects" role="tab" aria-controls="connects" aria-selected="false">Зв'язки</a>
-                            </li>
                         </ul>
                     </div>
                     <div class="tab-content profile-tab" id="myTabContent">
@@ -224,28 +221,6 @@
                             {% endif %}
                             <div class="row m-3">
                                 <a href="{{ url_for('record_add_image', number=number  ) }}" class="btn btn-outline-success" role="button">Додати</a>
-                            </div>
-                        </div>
-                        <div class="tab-pane fade" id="connects" role="tabpanel" aria-labelledby="profile-tab">
-                            {% for connect in person.contacts %}
-                                <div class="row">
-{#                                    <div class="col-md-4">#}
-{#                                        <label>{% if  estate.get_type() %}{{ estate.get_type() }}{% endif %}</label>#}
-{#                                    </div>#}
-{#                                    <div class="col-md-4">#}
-{#                                        <p>{% if  estate.place_id %}{{ estate.get_place().address }}{% endif %}</p>#}
-{#                                    </div>#}
-{#                                    <div class="col-md-4">#}
-{#                                        <div class="btn-group btn-block mb-2">#}
-{#                                            <a href="{{ url_for('edit_estate', number=number, estate_id=estate.id  ) }}" class="btn btn-outline-primary" role="button">Редагувати</a>#}
-                                            {#                                            <a href="{{ url_for('remove_estate', number=number, estate_id=estate.id  ) }}" class="btn btn-outline-danger" role="button">Видалити</a>#}
-{#                                        </div>#}
-{#                                    </div>#}
-                                </div>
-                                <hr>
-                            {% endfor %}
-                            <div class="row">
-                                <a href="{{ url_for('add_estate', number=number  ) }}" class="btn btn-outline-success" role="button">Додати</a>
                             </div>
                         </div>
                     </div>
