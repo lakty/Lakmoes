@@ -235,15 +235,28 @@
                             {% if person.others %}
                                 <div class="row">
                                     {% for other in person.others %}
-                                        <div class="col-md-3">
-                                            {{ others }}
-                                            <a class="btn btn-danger btn-block" href="{{ url_for('remove_record_image', number = number, image_id=image.id ) }}">Видалити</a>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <label>{{ other.text }}</label>
+                                            </div>
+                                            <div class="col-md-6">
+                                                {% for source in other.sources %}
+                                                    <p>{{ source.source }}</p>
+                                                {% endfor %}
+                                            </div>
                                         </div>
+                                        {#                                    <div class="col-md-4">#}
+                                        {#                                        <div class="btn-group btn-block mb-2">#}
+                                        {#                                            <a href="{{ url_for('edit_contact', number=number, contact_id=contact.id  ) }}" class="btn btn-outline-primary" role="button">Редагувати</a>#}
+                                        {#                                            <a href="{{ url_for('remove_contact', number=number, contact_id=contact.id  ) }}" class="btn btn-outline-danger" role="button">Видалити</a>#}
+                                        {#                                        </div>#}
+                                        {#                                    </div>#}
+                                        <hr>
                                     {% endfor %}
                                 </div>
                             {% endif %}
                             <div class="row m-3">
-                                <a href="{{ url_for('add_other', number=number  ) }}" class="btn btn-outline-success" role="button">Додати</a>
+{#                                <a href="{{ url_for('add_other', number=number  ) }}" class="btn btn-outline-success" role="button">Додати</a>#}
                             </div>
                         </div>
                     </div>
