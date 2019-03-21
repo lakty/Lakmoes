@@ -10,6 +10,12 @@ def load_user(user_id):
     return User.query.get(user_id)
 
 
+class Connects(db.Model):
+    fk_record_from = db.Column(db.Integer, db.ForeignKey('record.id'), primary_key=True)
+    fk_record_to = db.Column(db.Integer, db.ForeignKey('record.id'), primary_key=True)
+    category_id = db.Column(db.Integer, db.ForeignKey('category.id'))
+
+
 class Record(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
@@ -18,6 +24,8 @@ class Record(db.Model):
     persons = db.relationship('Person', backref='author', lazy='dynamic')
     permission = db.Column(db.Boolean, default=True)
     category_id = db.Column(db.Integer, db.ForeignKey('category.id'))
+    record_to = db.relationship('Connects', backref='to', primaryjoin=id == Connects.fk_record_to)
+    record_from = db.relationship('Connects', backref='from', primaryjoin=id == Connects.fk_record_from)
 
     def __init__(self, type, user_id, permission, category):
         self.category_id = Category.query.filter(Category.category == category).first().id,
@@ -34,6 +42,7 @@ class Category(db.Model):
     category = db.Column(db.String)
     records = db.relationship('Record', backref='author', lazy='dynamic')
     users = db.relationship('User', backref='author', lazy='dynamic')
+    connects = db.relationship('Connects', backref='author', lazy='dynamic')
 
 
 class Rule(db.Model):
@@ -74,7 +83,7 @@ class User(db.Model, UserMixin):
 
     def get_image(self):
         if len(list(self.images)) > 0:
-            return ['/uploads/'+image.image_url for image in self.images]
+            return ['/uploads/' + image.image_url for image in self.images]
         else:
             return ['http://ssl.gstatic.com/accounts/ui/avatar_2x.png']
 
