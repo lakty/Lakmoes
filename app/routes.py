@@ -502,3 +502,21 @@ def add_other(number):
         db.session.commit()
         return redirect(url_for('record', number=number))
     return render_template("add_other.html", title=f'Досьє на особу', form=form, number=number)
+
+
+@app.route('/record<int:number>/add/connect/', methods=["POST", "GET"])
+@login_required
+def add_connects(number):
+    record_to_add_other = db.session.query(Record).filter(Record.id == number).first()
+
+    form = OtherForm()
+    if form.is_submitted():
+        source = Source(source=form.other_source.data)
+        db.session.add(source)
+        connect = Connects(
+            fk_record_from=form,
+            category_id=category_id,
+            fk_record_to=form
+        )
+        return redirect(url_for('record', number=number))
+    return render_template("add_connects.html", title=f'Досьє на особу', form=form, number=number)
