@@ -221,8 +221,7 @@
                         </div>
                         <div class="tab-pane fade" id="other" role="tabpanel" aria-labelledby="profile-tab">
                             {% if person.others %}
-                                <div class="row">
-                                    {% for other in person.others %}
+                                {% for other in person.others %}
                                         <div class="row">
                                             <div class="col-md-6">
                                                 <label>{{ other.text }}</label>
@@ -241,7 +240,6 @@
                                         {#                                    </div>#}
                                         <hr>
                                     {% endfor %}
-                                </div>
                             {% endif %}
                             <div class="row m-3">
                                 <a href="{{ url_for('add_other', number=number  ) }}" class="btn btn-outline-success" role="button">Додати</a>
@@ -249,8 +247,7 @@
                         </div>
                         <div class="tab-pane fade" id="connects" role="tabpanel" aria-labelledby="profile-tab">
                             {% if record.get_connects() %}
-                                <div class="row">
-                                    {% for connect in record.get_connects() %}
+                                {% for connect in record.get_connects() %}
                                         <div class="row">
                                             <div class="col-md-6">
                                                 <a href="{{ url_for('record', number=connect.get_record().persons[0].id ) }}"><p>{{ connect.get_record().persons[0].last_name }} {% if  connect.get_record().persons[0].first_name %}{{ connect.get_record().persons[0].first_name }}{% endif %} {% if  connect.get_record().persons[0].middle_name %}{{ connect.get_record().persons[0].middle_name }}{% endif %}</p></a>
@@ -269,7 +266,6 @@
 {#                                                                            </div>#}
                                         <hr>
                                     {% endfor %}
-                                </div>
                             {% endif %}
                             <div class="row m-3">
                                 <a href="{{ url_for('add_connects', number=number  ) }}" class="btn btn-outline-success" role="button">Додати</a>
