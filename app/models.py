@@ -21,6 +21,9 @@ class Connects(db.Model):
         self.fk_record_to = Record.query.filter_by(id=record_to).first().id or None
         self.type_id = Type.query.filter_by(type=connect_type).first().id
 
+    def get_record(self):
+        return Record.query.filter(Record.id == self.fk_record_to).first()
+
 
 class Record(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -41,6 +44,9 @@ class Record(db.Model):
 
     def get_category(self):
         return Category.query.filter(Category.id == self.category_id).first().category
+
+    def get_connects(self):
+        return Connects.query.filter(Connects.fk_record_from == self.id).all()
 
 
 class Category(db.Model):
