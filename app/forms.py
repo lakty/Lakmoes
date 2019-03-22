@@ -183,13 +183,14 @@ class OtherForm(FlaskForm):
 
 
 class ConnectForm(FlaskForm):
-    first_record = StringField('', validators=[RequiredIf()])
+    first_record = StringField('ID особи', validators=[RequiredIf()])
     connect_source = StringField('Джерело зв\'язку', validators=[RequiredIf()])
-    type = SelectField(
+    connect_type = SelectField(
         'Тип зв\'язку',
         choices=[
-            ('Фото особи', 'Фото особи'),
-            ('Фоторобот', 'Фоторобот'),
+            ('Родині', 'Родині'),
+            ('Дружні', 'Дружні'),
+            ('Професійні', 'Професійні'),
         ]
     )
     submit = SubmitField('Додати')

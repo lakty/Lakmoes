@@ -13,7 +13,13 @@ def load_user(user_id):
 class Connects(db.Model):
     fk_record_from = db.Column(db.Integer, db.ForeignKey('record.id'), primary_key=True)
     fk_record_to = db.Column(db.Integer, db.ForeignKey('record.id'), primary_key=True)
-    category_id = db.Column(db.Integer, db.ForeignKey('category.id'))
+    type_id = db.Column(db.Integer, db.ForeignKey('type.id'))
+    source_id = db.Column(db.Integer, db.ForeignKey('source.id'))
+
+    def __init__(self, connect_type=None, record_from=None, record_to=None):
+        self.fk_record_from = Record.query.filter_by(id=record_from).first().id or None
+        self.fk_record_to = Record.query.filter_by(id=record_to).first().id or None
+        self.type_id = Type.query.filter_by(type=connect_type).first().id
 
 
 class Record(db.Model):
@@ -42,7 +48,6 @@ class Category(db.Model):
     category = db.Column(db.String)
     records = db.relationship('Record', backref='author', lazy='dynamic')
     users = db.relationship('User', backref='author', lazy='dynamic')
-    connects = db.relationship('Connects', backref='author', lazy='dynamic')
 
 
 class Rule(db.Model):
@@ -147,6 +152,7 @@ class Code(db.Model):
 class Type(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     type = db.Column(db.String(50))
+    connects = db.relationship('Connects', backref='author', lazy='dynamic')
 
 
 class Contact(db.Model):
@@ -170,6 +176,7 @@ class Source(db.Model):
     place_id = db.Column(db.Integer, db.ForeignKey('place.id'))
     date_id = db.Column(db.Integer, db.ForeignKey('date.id'))
     estate_id = db.Column(db.Integer, db.ForeignKey('estate.id'))
+    connects = db.relationship('Connects', backref='source', lazy='dynamic')
 
 
 class Estate(db.Model):
