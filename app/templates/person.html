@@ -247,6 +247,7 @@
                         </div>
                         <div class="tab-pane fade" id="connects" role="tabpanel" aria-labelledby="profile-tab">
                             {% if record.get_connects() %}
+<<<<<<< Updated upstream
                                 {% for connect in record.get_connects() %}
                                     <div class="row">
                                         <div class="col-md-6">
@@ -264,6 +265,22 @@
                                     {#                                                                            </div>#}
                                     <hr>
                                 {% endfor %}
+=======
+                                <div class="row">
+                                    {% for connect in record.get_connects() %}
+                                        {% if connect.get_record().persons[0] %}
+                                        
+                                        {% endif %}
+{#                                                                            <div class="col-md-4">#}
+{#                                                                                <div class="btn-group btn-block mb-2">#}
+{#                                                                                    <a href="{{ url_for('edit_contact', number=number, contact_id=contact.id  ) }}" class="btn btn-outline-primary" role="button">Редагувати</a>#}
+{#                                                                                    <a href="{{ url_for('remove_contact', number=number, contact_id=contact.id  ) }}" class="btn btn-outline-danger" role="button">Видалити</a>#}
+{#                                                                                </div>#}
+{#                                                                            </div>#}
+                                        <hr>
+                                    {% endfor %}
+                                </div>
+>>>>>>> Stashed changes
                             {% endif %}
                             <div class="row m-3">
                                 <a href="{{ url_for('add_connects', number=number  ) }}" class="btn btn-outline-success" role="button">Додати</a>
