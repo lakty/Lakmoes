@@ -10,6 +10,21 @@ def load_user(user_id):
     return User.query.get(user_id)
 
 
+class Connects(db.Model):
+    fk_record_from = db.Column(db.Integer, db.ForeignKey('record.id'), primary_key=True)
+    fk_record_to = db.Column(db.Integer, db.ForeignKey('record.id'), primary_key=True)
+    type_id = db.Column(db.Integer, db.ForeignKey('type.id'))
+    source_id = db.Column(db.Integer, db.ForeignKey('source.id'))
+
+    def __init__(self, connect_type=None, record_from=None, record_to=None):
+        self.fk_record_from = Record.query.filter_by(id=record_from).first().id or None
+        self.fk_record_to = Record.query.filter_by(id=record_to).first().id or None
+        self.type_id = Type.query.filter_by(type=connect_type).first().id
+
+    def get_record(self):
+        return Record.query.filter(Record.id == self.fk_record_to).first()
+
+
 class Record(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
@@ -18,6 +33,8 @@ class Record(db.Model):
     persons = db.relationship('Person', backref='author', lazy='dynamic')
     permission = db.Column(db.Boolean, default=True)
     category_id = db.Column(db.Integer, db.ForeignKey('category.id'))
+    record_to = db.relationship('Connects', backref='to', primaryjoin=id == Connects.fk_record_to)
+    record_from = db.relationship('Connects', backref='from', primaryjoin=id == Connects.fk_record_from)
 
     def __init__(self, type, user_id, permission, category):
         self.category_id = Category.query.filter(Category.category == category).first().id,
@@ -27,6 +44,9 @@ class Record(db.Model):
 
     def get_category(self):
         return Category.query.filter(Category.id == self.category_id).first().category
+
+    def get_connects(self):
+        return Connects.query.filter(Connects.fk_record_from == self.id).all()
 
 
 class Category(db.Model):
@@ -74,7 +94,7 @@ class User(db.Model, UserMixin):
 
     def get_image(self):
         if len(list(self.images)) > 0:
-            return ['/uploads/'+image.image_url for image in self.images]
+            return ['/uploads/' + image.image_url for image in self.images]
         else:
             return ['http://ssl.gstatic.com/accounts/ui/avatar_2x.png']
 
@@ -138,6 +158,7 @@ class Code(db.Model):
 class Type(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     type = db.Column(db.String(50))
+    connects = db.relationship('Connects', backref='author', lazy='dynamic')
 
 
 class Contact(db.Model):
@@ -161,6 +182,7 @@ class Source(db.Model):
     place_id = db.Column(db.Integer, db.ForeignKey('place.id'))
     date_id = db.Column(db.Integer, db.ForeignKey('date.id'))
     estate_id = db.Column(db.Integer, db.ForeignKey('estate.id'))
+    connects = db.relationship('Connects', backref='source', lazy='dynamic')
 
 
 class Estate(db.Model):

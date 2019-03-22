@@ -180,3 +180,17 @@ class OtherForm(FlaskForm):
     other = StringField('Додаткова інформація', validators=[RequiredIf()])
     other_source = StringField('Джерело додаткової інформації', validators=[RequiredIf()])
     submit = SubmitField('Додати')
+
+
+class ConnectForm(FlaskForm):
+    first_record = StringField('ID особи', validators=[RequiredIf()])
+    connect_source = StringField('Джерело зв\'язку', validators=[RequiredIf()])
+    connect_type = SelectField(
+        'Тип зв\'язку',
+        choices=[
+            ('Родині', 'Родині'),
+            ('Дружні', 'Дружні'),
+            ('Професійні', 'Професійні'),
+        ]
+    )
+    submit = SubmitField('Додати')

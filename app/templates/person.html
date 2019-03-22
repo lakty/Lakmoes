@@ -87,6 +87,9 @@
                             <li class="nav-item">
                                 <a class="nav-link" id="contact-tab" data-toggle="tab" href="#other" role="tab" aria-controls="other" aria-selected="false">Інші</a>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="contact-tab" data-toggle="tab" href="#connects" role="tab" aria-controls="connects" aria-selected="false">Зв'язки</a>
+                            </li>
                         </ul>
                     </div>
                     <div class="tab-content profile-tab" id="myTabContent">
@@ -216,21 +219,6 @@
                                 <a href="{{ url_for('record_add_image', number=number  ) }}" class="btn btn-outline-success" role="button">Додати</a>
                             </div>
                         </div>
-                        <div class="tab-pane fade" id="photo" role="tabpanel" aria-labelledby="profile-tab">
-                            {% if person.get_image() %}
-                                <div class="row">
-                                    {% for image in person.images %}
-                                        <div class="col-md-3">
-                                            <img class="img-thumbnail mb-2" src="/uploads/{{ image.image_url }}">
-                                            <a class="btn btn-danger btn-block" href="{{ url_for('remove_record_image', number = number, image_id=image.id ) }}">Видалити</a>
-                                        </div>
-                                    {% endfor %}
-                                </div>
-                            {% endif %}
-                            <div class="row m-3">
-                                <a href="{{ url_for('record_add_image', number=number  ) }}" class="btn btn-outline-success" role="button">Додати</a>
-                            </div>
-                        </div>
                         <div class="tab-pane fade" id="other" role="tabpanel" aria-labelledby="profile-tab">
                             {% if person.others %}
                                 <div class="row">
@@ -257,6 +245,34 @@
                             {% endif %}
                             <div class="row m-3">
                                 <a href="{{ url_for('add_other', number=number  ) }}" class="btn btn-outline-success" role="button">Додати</a>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="connects" role="tabpanel" aria-labelledby="profile-tab">
+                            {% if record.get_connects() %}
+                                <div class="row">
+                                    {% for connect in record.get_connects() %}
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <a href="{{ url_for('record', number=connect.get_record().persons[0].id ) }}"><p>{{ connect.get_record().persons[0].last_name }} {% if  connect.get_record().persons[0].first_name %}{{ connect.get_record().persons[0].first_name }}{% endif %} {% if  connect.get_record().persons[0].middle_name %}{{ connect.get_record().persons[0].middle_name }}{% endif %}</p></a>
+                                            </div>
+                                            <div class="col-md-6">
+                                                {% for source in connect.sources %}
+                                                    <p>{{ source.source }}</p>
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+{#                                                                            <div class="col-md-4">#}
+{#                                                                                <div class="btn-group btn-block mb-2">#}
+{#                                                                                    <a href="{{ url_for('edit_contact', number=number, contact_id=contact.id  ) }}" class="btn btn-outline-primary" role="button">Редагувати</a>#}
+{#                                                                                    <a href="{{ url_for('remove_contact', number=number, contact_id=contact.id  ) }}" class="btn btn-outline-danger" role="button">Видалити</a>#}
+{#                                                                                </div>#}
+{#                                                                            </div>#}
+                                        <hr>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            <div class="row m-3">
+                                <a href="{{ url_for('add_connects', number=number  ) }}" class="btn btn-outline-success" role="button">Додати</a>
                             </div>
                         </div>
                     </div>
