@@ -1,4 +1,3 @@
-from sqlalchemy import or_
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 from app import db
@@ -23,10 +22,7 @@ class Connects(db.Model):
         self.type_id = Type.query.filter_by(type=connect_type).first().id
 
     def get_record(self):
-        if Record.id == self.fk_record_to:
-            return Record.query.filter(Record.id == self.fk_record_from).first()
-        if Record.id == self.fk_record_from:
-            return Record.query.filter(Record.id == self.fk_record_to).first()
+        return Record.query.filter(Record.id == self.fk_record_to).first()
 
 
 class Record(db.Model):
@@ -50,7 +46,7 @@ class Record(db.Model):
         return Category.query.filter(Category.id == self.category_id).first().category
 
     def get_connects(self):
-        return Connects.query.filter((Connects.fk_record_from == self.id) | (Connects.fk_record_from == self.id)).all()
+        return Connects.query.filter(Connects.fk_record_from == self.id).all()
 
 
 class Category(db.Model):
